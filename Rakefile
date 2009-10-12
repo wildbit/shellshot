@@ -5,8 +5,11 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "shellshot"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{ruby proxy handling the complexities of system invocations}
+    gem.description = %Q{
+      A small library dealing with the obscurities of shell commands, piping and timeouts. 
+      Most of the stuff comes from bad experience in http://beanstalkapp.com.
+    }
     gem.email = "underlog@gmail.com"
     gem.homepage = "http://github.com/underlog/shellshot"
     gem.authors = ["Petyo Ivanov"]
@@ -21,6 +24,7 @@ end
 require 'spec/rake/spectask'
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
+  spec.spec_opts = %w[--format specdoc --color]
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
