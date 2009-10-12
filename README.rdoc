@@ -1,15 +1,16 @@
-shellshot
-  by Petyo Ivanov
-  http://dekaft.underlog.org
+= shellshot
+
+by Petyo Ivanov
+http://dekaft.underlog.org
 
 == DESCRIPTION:
 
-  A small library dealing with the obscurities of shell commands, piping and timeouts. 
-  Most of the stuff comes from bad experience in http://beanstalkapp.com.
+A small library dealing with the obscurities of shell commands, piping and timeouts. 
+Most of the stuff comes from bad experience in http://beanstalkapp.com.
 
 == FEATURES/PROBLEMS:
 
-  The whole thing would probably not work in Windows. 
+The whole thing would probably not work in Windows. Not my first time I guess.
 
 == SYNOPSIS:
 
