@@ -30,6 +30,10 @@ The whole thing would probably not work in Windows. Not my first time I guess.
     end
 
 
+== HISTORY:
+- 0.2.0 Switched to SystemTimer (*not* system_timer) for timeouts. The original was not working after all. Fixed one comment stating the wrong unit.
+- 0.1.0 Initial release.
+
 == LICENSE:
 
 (The MIT License)

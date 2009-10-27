@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{shellshot}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Petyo Ivanov"]
-  s.date = %q{2009-10-12}
+  s.date = %q{2009-10-27}
   s.description = %q{
       A small library dealing with the obscurities of shell commands, piping and timeouts. 
       Most of the stuff comes from bad experience in http://beanstalkapp.com.
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/shellshot.rb",
+     "shellshot.gemspec",
      "spec/shellshot_spec.rb",
      "spec/spec_helper.rb"
   ]
@@ -46,10 +47,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rspec>, [">= 0"])
+      s.add_runtime_dependency(%q<SystemTimer>, [">= 0"])
     else
       s.add_dependency(%q<rspec>, [">= 0"])
+      s.add_dependency(%q<SystemTimer>, [">= 0"])
     end
   else
     s.add_dependency(%q<rspec>, [">= 0"])
+    s.add_dependency(%q<SystemTimer>, [">= 0"])
   end
 end

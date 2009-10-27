@@ -1,4 +1,5 @@
-require 'english'
+require 'rubygems'
+require 'system_timer'
 
 module Shellshot
   
@@ -6,7 +7,7 @@ module Shellshot
 
     alias_method :system_exec, :exec
 
-    DEFAULT_TIMEOUT = 60 #minutes
+    DEFAULT_TIMEOUT = 60 * 60 # 1 hour
 
     attr_accessor :pid, :status
 
@@ -27,9 +28,9 @@ module Shellshot
     private
 
     def wait_for(seconds)
-      Timeout.timeout(seconds) do
+      SystemTimer.timeout(seconds) do
         Process.wait(pid)   
-        self.status = $CHILD_STATUS
+        self.status = $?
       end
     end
 
