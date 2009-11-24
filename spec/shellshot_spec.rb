@@ -8,12 +8,12 @@ describe Shellshot do
     "file".should be_a_file
   end
 
-  it "should pipe the out to the right file" do 
+  it "should pipe the out to the right file" do
     Shellshot.exec(%q[ruby -e 'puts "Hello World"'], :stdout => "file")
     "file".should contain("Hello World")
   end
 
-  it "should pipe the err to the right file" do 
+  it "should pipe the err to the right file" do
     Shellshot.exec(%q[ruby -e '$stderr << "error"'], :stderr => "file")
     "file".should contain("error")
   end
@@ -25,6 +25,10 @@ describe Shellshot do
 
   it "should cancel execution on time if timeout provided" do
     lambda { Shellshot.exec %q[ruby -e 'sleep 10000'], :timeout => 1 }.should raise_error(Timeout::Error)
+  end
+
+  it "should raise error if command returned something else." do
+    lambda { Shellshot.exec %q[ruby -e '$stderr << "problem"; exit 1;'] }.should raise_error(Shellshot::CommandError, "problem")
   end
 
 end
