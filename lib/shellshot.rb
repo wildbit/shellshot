@@ -31,6 +31,8 @@ module Shellshot
         terminate_child_process
         raise
       end
+
+      true
     end
 
     private
