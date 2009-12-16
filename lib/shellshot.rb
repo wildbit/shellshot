@@ -18,10 +18,10 @@ module Shellshot
 
       self.options = options
 
-      prepare_pipes if no_stderr?
+      prepare_pipes
       self.pid = fork do
-        close_reading_pipe if no_stderr?
-        redefine_stds(options)
+        close_reading_pipes
+        redefine_stds
         system_exec(command)
       end
 
@@ -33,6 +33,28 @@ module Shellshot
       end
 
       true
+    end
+
+    def stderr_contents
+      unless stderr_defined?
+        @stderr_wr.close
+        contents = @stderr_rd.read
+        @stderr_rd.close
+        contents
+      else
+        File.read(stderr_location)
+      end
+    end
+
+    def stdout_contents
+      unless stdout_defined?
+        @stdout_wr.close
+        contents = @stdout_rd.read
+        @stdout_rd.close
+        contents
+      else
+        File.read(stdout_location)
+      end
     end
 
     private
@@ -47,10 +69,6 @@ module Shellshot
       end
     end
 
-    def close_stderr
-      error_tempfile.close
-    end
-
     def terminate_child_process
       if pid
         Process.kill("KILL", pid)
@@ -58,60 +76,55 @@ module Shellshot
       end
     end
 
-    def redefine_stds(options)
-      if stdall_location
-        combined = File.open(stdall_location, "w+")
-        $stdout.reopen(combined)
-        $stderr.reopen(combined)
-      else
-        $stdout.reopen(File.open(stdout_location, "w+")) if stdout_location
-        if no_stderr?
-          $stderr.reopen(@wr)
-        else
-          $stderr.reopen(File.open(stderr_location, "w+"))
-        end
-      end
+    def redefine_stds
+      $stdout.reopen(stdout_descriptor)
+      $stderr.reopen(stderr_descriptor)
     end
 
     def stderr_location
       stdall_location || options[:stderr]
     end
 
-    def no_stderr?
-      !stderr_location
-    end
-
     def stdout_location
       stdall_location || options[:stdout]
+    end
+
+    def stderr_descriptor
+      stdall_descriptor || @stderr_wr || File.open(stderr_location, "w+")
+    end
+
+    def stdout_descriptor
+      stdall_descriptor || @stdout_wr || File.open(stdout_location, "w+")
+    end
+
+    def stdall_descriptor
+      if stdall_location
+        @stdall_descriptor ||= File.open(stdall_location, "w+")
+      end
+    end
+
+    def stderr_defined?
+      !!stderr_location
+    end
+
+    def stdout_defined?
+      !!stdout_location
     end
 
     def stdall_location
       options[:stdall]
     end
 
-    def close_reading_pipe
-      @rd.close
-    end
-
-    def stderr_contents
-      if no_stderr?
-        @wr.close
-        contents = @rd.read
-        @rd.close
-        contents
-      else
-        File.read(stderr_location)
-      end
+    def close_reading_pipes
+      @stderr_rd.close unless stderr_defined?
+      @stdout_rd.close unless stdout_defined?
     end
 
     def prepare_pipes
-      @rd, @wr = IO.pipe
+      @stderr_rd, @stderr_wr = IO.pipe unless stderr_defined?
+      @stdout_rd, @stdout_wr = IO.pipe unless stdout_defined?
     end
 
-    def close_pipes
-      @rd.close
-      @wr.close
-    end
   end
 
   def self.exec(command, options = {})

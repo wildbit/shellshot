@@ -31,6 +31,18 @@ describe Shellshot do
     lambda { Shellshot.exec %q[ruby -e '$stderr << "problem"; exit 1;'] }.should raise_error(Shellshot::CommandError, "problem")
   end
 
+  it "should capture stdout by default" do
+    cmd = Shellshot::Command.new
+    cmd.exec %q[ruby -e '$stdout << "test"']
+    cmd.stdout_contents.should == "test"
+  end
+
+  it "should capture stderr by default" do
+    cmd = Shellshot::Command.new
+    cmd.exec %q[ruby -e '$stderr << "test"']
+    cmd.stderr_contents.should == "test"
+  end
+
 end
 
 # EOF
