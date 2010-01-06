@@ -1,4 +1,3 @@
-
 require File.expand_path(
     File.join(File.dirname(__FILE__), %w[.. lib shellshot]))
 
@@ -6,7 +5,7 @@ require 'tmpdir'
 require 'rubygems'
 require 'ruby-debug'
 
-Spec::Matchers.define :be_a_file do 
+Spec::Matchers.define :be_a_file do
   match do |path|
     File.exists?(path)
   end
@@ -28,7 +27,7 @@ end
 
 Spec::Runner.configure do |config|
   config.before(:each) do
-    @tmpdir = Dir.mktmpdir 
+    @tmpdir = Dir.mktmpdir
     Dir.chdir(@tmpdir)
   end
 

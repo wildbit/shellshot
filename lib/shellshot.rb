@@ -36,7 +36,7 @@ module Shellshot
     end
 
     def stderr_contents
-      unless stderr_defined?
+      @stderr_contents ||= unless stderr_defined?
         @stderr_wr.close
         contents = @stderr_rd.read
         @stderr_rd.close
@@ -47,7 +47,7 @@ module Shellshot
     end
 
     def stdout_contents
-      unless stdout_defined?
+      @stdout_contents ||= unless stdout_defined?
         @stdout_wr.close
         contents = @stdout_rd.read
         @stdout_rd.close
@@ -82,11 +82,11 @@ module Shellshot
     end
 
     def stderr_location
-      stdall_location || options[:stderr]
+      stdall_location || (options[:stderr] == false ? null_location : options[:stderr])
     end
 
     def stdout_location
-      stdall_location || options[:stdout]
+      stdall_location || (options[:stdout] == false ? null_location : options[:stdout])
     end
 
     def stderr_descriptor
@@ -104,15 +104,15 @@ module Shellshot
     end
 
     def stderr_defined?
-      !!stderr_location
+      !stderr_location.nil?
     end
 
     def stdout_defined?
-      !!stdout_location
+      !stdout_location.nil?
     end
 
     def stdall_location
-      options[:stdall]
+      options[:stdall] == false ? null_location : options[:stdall]
     end
 
     def close_reading_pipes
@@ -123,6 +123,10 @@ module Shellshot
     def prepare_pipes
       @stderr_rd, @stderr_wr = IO.pipe unless stderr_defined?
       @stdout_rd, @stdout_wr = IO.pipe unless stdout_defined?
+    end
+
+    def null_location
+      "/dev/null"
     end
 
   end

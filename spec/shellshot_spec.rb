@@ -43,6 +43,20 @@ describe Shellshot do
     cmd.stderr_contents.should == "test"
   end
 
+  it "should discard stdout and stderr if false passed" do
+    cmd = Shellshot::Command.new
+    cmd.exec %q[ruby -e '$stderr << "test"; $stdout << "test"'], :stdout => false, :stderr => false
+    cmd.stderr_contents.should == ""
+    cmd.stdout_contents.should == ""
+  end
+
+  it "should discard stdout and stderr if stdall = false" do
+    cmd = Shellshot::Command.new
+    cmd.exec %q[ruby -e '$stderr << "test"; $stdout << "test"'], :stdall => false
+    cmd.stderr_contents.should == ""
+    cmd.stdout_contents.should == ""
+  end
+
 end
 
 # EOF

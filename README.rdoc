@@ -5,13 +5,13 @@ http://dekaft.underlog.org
 
 == DESCRIPTION:
 
-A small library dealing with the obscurities of shell commands, piping and timeouts. 
+A small library dealing with the obscurities of shell commands, piping and timeouts.
 Most of the stuff comes from bad experience in http://beanstalkapp.com.
 
 == FEATURES/PROBLEMS:
 
 The whole thing would probably not work in Windows. Not my first time I guess.
-
+The capture of the output hangs if large amount of text is passed (tests captured it at ~10k chars). If you need larger amounts of text, write them in a temp file somewhere.
 == SYNOPSIS:
 
     # Basic usage
@@ -22,15 +22,20 @@ The whole thing would probably not work in Windows. Not my first time I guess.
     Shellshot.exec "ruby -e %q[ruby -e "puts 'Hello World'"], :stdout => '/tmp/out', :stderr => '/tmp/err'
     Shellshot.exec "ruby -e %q[ruby -e "puts 'Hello World'"], :stdall => '/tmp/all'
 
-    # Timeout 
-    begin 
+    # Silence standard outputs. false works for stdout, stderr, and stdall
+    Shellshot.exec "ruby -e %q[ruby -e "puts 'Hello World'"], :stdout => false
+
+    # Timeout
+    begin
       Shellshot.exec "ruby -e 'sleep 10000'", :timeout => 2 # seconds
     rescue Timeout::Error => e
-      # ... 
+      # ...
     end
 
 
 == HISTORY:
+- 0.4.0 Capture stds with pipes
+- 0.3.0 Raise error on abnormal exits
 - 0.2.0 Switched to SystemTimer (*not* system_timer) for timeouts. The original was not working after all. Fixed one comment stating the wrong unit.
 - 0.1.0 Initial release.
 
