@@ -7,7 +7,7 @@ begin
     gem.name = "shellshot"
     gem.summary = %Q{ruby proxy handling the complexities of system invocations}
     gem.description = %Q{
-      A small library dealing with the obscurities of shell commands, piping and timeouts. 
+      A small library dealing with the obscurities of shell commands, piping and timeouts.
       Most of the stuff comes from bad experience in http://beanstalkapp.com.
     }
     gem.email = "underlog@gmail.com"
@@ -51,4 +51,13 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "shellshot #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+require 'ruby-prof/task'
+desc "run the profile tests"
+Rake::TestTask.new(:profile) do |t|
+  t.libs << "profile"
+  t.pattern = 'profile/*_profile.rb'
+  t.verbose = true
+  t.warning = false
 end
